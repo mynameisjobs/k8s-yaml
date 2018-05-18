@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-department-clf
+  labels:
+    app: product-department-clf
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+  selector:
+    app: product-department-clf

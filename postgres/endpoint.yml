@@ -1,0 +1,13 @@
+kind: "Endpoints"
+apiVersion: "v1"
+metadata:
+  name: "postgresql" 
+subsets: 
+  -
+    addresses:
+      -
+        ip: "10.30.0.2" 
+    ports:
+      -
+        port: 5432 
+        name: "postgres"

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-department-clf
+spec:
+  selector:
+    matchLabels:
+      app: product-department-clf
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: product-department-clf 
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: product-department-clf
+        image: registry.ianchenhq.com/product_department_clf:1526621270
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+          - name: PG_DATABASE
+            value: 'honestbee'
+          - name: PG_USER
+            value: 'postgres'
+          - name: PG_PASSWORD
+            value: 'mysecretpassword'
+          - name: RBMQ_HOST
+            value: 'rabbitmq'
+          - name: PG_HOST
+            value: 'postgresql'
+          - name: ES_HOST
+            value: 'elasticsearch'
+        command: 
+          - sh
+          - -c 
+        args:
+          - |
+            exec gunicorn app:app --bind 0.0.0.0

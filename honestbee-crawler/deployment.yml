@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: honestbee-crawler
+spec:
+  selector:
+    matchLabels:
+      app: honestbee-crawler
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: honestbee-crawler
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: honestbee-crawler
+        image: registry.ianchenhq.com/honestbee-crawler:1526372088
+        env:
+          - name: PG_DATABASE
+            value: 'honestbee'
+          - name: PG_USER
+            value: 'postgres'
+          - name: PG_PASSWORD
+            value: 'mysecretpassword'
+          - name: RBMQ_HOST
+            value: 'rabbitmq'
+          - name: PG_HOST
+            value: 'postgresql'
+          - name: ES_HOST
+            value: 'elasticsearch'
+        command: 
+          - sh
+          - -c 
+        args:
+          - |
+            exec celery worker -A main -Q celery,to_postgres,to_es --loglevel=info 

@@ -1,0 +1,13 @@
+kind: "Endpoints"
+apiVersion: "v1"
+metadata:
+  name: "rabbitmq" 
+subsets: 
+  -
+    addresses:
+      -
+        ip: "10.30.0.2" 
+    ports:
+      -
+        port: 5672 
+        name: "rabbitmq"
