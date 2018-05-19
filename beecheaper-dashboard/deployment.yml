@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beecheaper-dashboard
+spec:
+  selector:
+    matchLabels:
+      app: beecheaper-dashboard
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: beecheaper-dashboard
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: beecheaper-dashboard
+        image: registry.ianchenhq.com/beecheaper-dashboard:b1319c2f580fe123c3ea83d226670df48023ab89
+        env:
+          - name: DATABASE_HOST
+            value: 'postgresql'
+          - name: DATABASE_USERNAME
+            value: 'postgres'
+          - name: RAILS_ENV
+            value: 'production'
+          - name: DATABASE_PASSWORD
+            value: 'mysecretpassword'
+          - name: ES_HOST
+            value: 'elasticsearch'
+          - name: FLASK_HOST
+            value: 'product-department-clf'
+          - name: FLASK_PORT
+            value: '8000'
+        command: 
+          - sh
+          - -c 
+        args:
+          - |
+            bundle exec rails db:migrate
+            bundle exec rake assets:precompile
+            #while true; do sleep 200; done
+            exec bundle exec rails s -b 0.0.0.0

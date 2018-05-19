@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
       - name: honestbee-crawler
-        image: registry.ianchenhq.com/honestbee-crawler:1526372088
+        image: registry.ianchenhq.com/honestbee-crawler:1526631143
         env:
           - name: PG_DATABASE
             value: 'honestbee'

@@ -5,8 +5,10 @@ metadata:
   labels:
     app: product-department-clf
 spec:
+  type: NodePort
   ports:
   - port: 8000
+    nodePort: 30003
     protocol: TCP
   selector:
     app: product-department-clf
